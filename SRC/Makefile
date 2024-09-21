@@ -1,22 +1,21 @@
 CC = gcc
-WINDRES = windres
 
-CFLAGS = -mno-cygwin -O3 -fomit-frame-pointer -Wall -I/usr/local/include
-LFLAGS = -mno-cygwin -s
-LIBALLEG = -L/usr/local/lib -lalleg
+CFLAGS = -fcommon -O3 -Wall -fomit-frame-pointer -I/usr/include
+LFLAGS = -s
+#LIBALLEG = /usr/lib/liballeg.so.4.2 -lalleg_unsharable
+LIBALLEG = /usr/lib/x86_64-linux-gnu/liballeg.so.4.4.3
 
-
-all: o2em.exe dis48.exe
+all: o2em dis48
 
 clean:
-	del -f audio.o cpu.o cset.o keyboard.o main.o table.o vdc.o vmachine.o debug.o dis48.o timefunc.o voice.o crc32.o vpp_cset.o vpp.o score.o o2em.res o2em.exe dis48.exe
+	rm -f audio.o cpu.o cset.o keyboard.o main.o table.o vdc.o vmachine.o debug.o timefunc.o voice.o crc32.o vpp_cset.o vpp.o score.o dis48.o
 
 
-o2em.exe:	audio.o cpu.o cset.o keyboard.o main.o table.o vdc.o vmachine.o debug.o timefunc.o voice.o crc32.o vpp_cset.o vpp.o o2em.res score.o
-	$(CC) $(LFLAGS) audio.o cpu.o cset.o keyboard.o main.o table.o vdc.o vmachine.o debug.o timefunc.o voice.o crc32.o vpp_cset.o vpp.o score.o o2em.res -o o2em.exe $(LIBALLEG)
+o2em:	audio.o cpu.o cset.o keyboard.o main.o table.o vdc.o vmachine.o debug.o timefunc.o voice.o crc32.o vpp_cset.o vpp.o score.o 
+	$(CC) $(LFLAGS) audio.o cpu.o cset.o keyboard.o main.o table.o vdc.o vmachine.o debug.o timefunc.o voice.o crc32.o vpp_cset.o vpp.o score.o -o o2em $(LIBALLEG)
 
-dis48.exe:	dis48.o table.o
-	$(CC) $(LFLAGS) dis48.o table.o -o dis48.exe
+dis48:	dis48.o table.o
+	$(CC) $(LFLAGS) dis48.o table.o -o dis48
 
 
 audio.o:	audio.c audio.h cpu.h types.h config.h vmachine.h
@@ -34,10 +33,10 @@ debug.o:	debug.c debug.h cpu.h keyboard.h vmachine.h audio.h vdc.h table.h
 dis48.o:	dis48.c types.h table.h
 	$(CC) $(CFLAGS) -c dis48.c -o dis48.o
 	
-keyboard.o:	keyboard.c keyboard.h types.h cpu.h vmachine.h vdc.h audio.h voice.h vpp.h score.h
+keyboard.o:	keyboard.c keyboard.h types.h cpu.h vmachine.h vdc.h audio.h voice.h vpp.h
 	$(CC) $(CFLAGS) -c keyboard.c -o keyboard.o
 	
-main.o:	main.c crc32.h audio.h vmachine.h config.h vdc.h cpu.h debug.h keyboard.h voice.h score.h
+main.o:	main.c crc32.h audio.h vmachine.h config.h vdc.h cpu.h debug.h keyboard.h voice.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
 	
 table.o:	table.c table.h cpu.h
@@ -64,9 +63,6 @@ vpp_cset.o: vpp_cset.c vpp_cset.h
 vpp.o: vpp.c vpp.h types.h vpp_cset.h vmachine.h vdc.h
 	$(CC) $(CFLAGS) -c vpp.c -o vpp.o
 
-score.o: score.c score.h vmachine.h
+score.o: score.c score.h vmachine.h types.h
 	$(CC) $(CFLAGS) -c score.c -o score.o
-
-o2em.res: o2em.rc o2em.ico
-	$(WINDRES) -O coff -o o2em.res -i o2em.rc
 

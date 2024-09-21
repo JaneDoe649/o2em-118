@@ -107,13 +107,13 @@ void save_highscore(int highscore,char *scorefile)
 
         fn = fopen(scorefile,"w");
 	if (fn==NULL) {
-		fprintf(stderr,"Error opening highscore-file %s: %i\n",scorefile,errno);
+		fprintf(stderr,"Error opening highscore-file %s\n",scorefile);
 		exit(EXIT_FAILURE);
 	}
 	
 	if (fprintf(fn,"%i",highscore)<=0)
 	{
-		fprintf(stderr,"Error writing to highscore-file %s: %i\n",scorefile,errno);
+		fprintf(stderr,"Error writing to highscore-file %s\n",scorefile);
 		exit(EXIT_FAILURE);
 	}	
 
