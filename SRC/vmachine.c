@@ -491,7 +491,7 @@ void ext_write(Byte dat, ADDRESS adr){
 	} else if (!(p1 & 0x10) && !(p1 & 0x40)) {
 		adr = adr & 0xFF;
         		
-        if (adr < 0x80) {
+        if (!(app_data.megaxrom && (adr >= 0x80))) { // When megaxrom is not used, all extram is writable
 			/* Handle ext RAM Write */
 			extRAM[adr] = dat;
 		
